@@ -32,6 +32,8 @@
 $ npm install
 ```
 
+Copy file '.env.exemple' to .env
+
 ## Compile and run the project
 
 ```bash

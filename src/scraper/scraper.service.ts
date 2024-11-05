@@ -10,8 +10,8 @@ import * as Excel from 'exceljs';
 import { JobOffer } from './interfaces/job-offers.interface';
 import { OfferSearch } from './interfaces/offer-search.interface';
 
-import { SEARCHS } from 'src/config/keywords';
-import { OFFER_FILE_FOLDER_NAME, OFFER_FILE_PREFIX } from 'src/config';
+import { SEARCHS } from '../config/keywords';
+import { OFFER_FILE_FOLDER_NAME, OFFER_FILE_PREFIX } from '../config';
 
 // File rows needed to display in excel file
 const FILE_ROWS = ['Title', 'Company', 'Location'];
@@ -89,6 +89,9 @@ export class ScraperService {
       // Fetch HelloWork page with current search params (job title, job location, page)
       const response = await axios.get(
         this.generateUrl({ title, location, page }),
+        {
+          timeout: 2000,
+        },
       );
 
       const html = response.data;
@@ -120,7 +123,7 @@ export class ScraperService {
       return offers;
     } catch (error) {
       console.error(`Error scraping for ${title}, page ${page}:`, error);
-      return [];
+      throw new Error(`Error scraping for ${title}, page ${page}`);
     }
   }
 
@@ -129,29 +132,34 @@ export class ScraperService {
    * @param offers - Array of `JobOffer` objects to export.
    */
   exportToExcel(offers: JobOffer[]): void {
-    const workbook = new Excel.Workbook();
+    try {
+      const workbook = new Excel.Workbook();
 
-    SEARCHS.forEach((search) => {
-      const worksheet = workbook.addWorksheet(search.title);
+      SEARCHS.forEach((search) => {
+        const worksheet = workbook.addWorksheet(search.title);
 
-      // Add row title
-      worksheet.addRow(FILE_ROWS);
+        // Add row title
+        worksheet.addRow(FILE_ROWS);
 
-      // Filter offers by search title to match current worksheet
-      const filteredOffers = offers.filter(
-        (offer) => offer?.search.title === search.title,
-      );
+        // Filter offers by search title to match current worksheet
+        const filteredOffers = offers.filter(
+          (offer) => offer?.search.title === search.title,
+        );
 
-      // Add worksheet rows from offers
-      filteredOffers.forEach((offer) => {
-        worksheet.addRow([offer.title, offer.company, offer.search.location]);
+        // Add worksheet rows from offers
+        filteredOffers.forEach((offer) => {
+          worksheet.addRow([offer.title, offer.company, offer.search.location]);
+        });
       });
-    });
 
-    // Save Excel file to choosen folder
-    const timestamp = new Date().getTime();
-    workbook.xlsx.writeFile(
-      `${OFFER_FILE_FOLDER_NAME}/${OFFER_FILE_PREFIX}${timestamp}.xlsx`,
-    );
+      // Save Excel file to choosen folder
+      const timestamp = new Date().getTime();
+      workbook.xlsx.writeFile(
+        `${OFFER_FILE_FOLDER_NAME}/${OFFER_FILE_PREFIX}${timestamp}.xlsx`,
+      );
+    } catch (error) {
+      console.error('Error creating excel file', error);
+      throw new Error('Error creating excel file');
+    }
   }
 }

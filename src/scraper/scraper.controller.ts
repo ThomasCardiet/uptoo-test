@@ -1,8 +1,9 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, HttpException, HttpStatus } from '@nestjs/common';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+
+import { SEARCHS } from '../config/keywords';
+
 import { ScraperService } from './scraper.service';
-import { SEARCHS } from 'src/config/keywords';
-import { OFFER_FILE_FOLDER_NAME } from 'src/config';
 
 @Controller('generate-scraping-file')
 export class ScraperController {
@@ -16,10 +17,25 @@ export class ScraperController {
   @ApiOperation({ summary: 'Generate a scraping file' })
   @ApiResponse({ status: 200, description: 'Scraping file generated' })
   async generateScrapingFile() {
-    const offers = await this.scraperService.scrapeJobOffers(SEARCHS);
-    this.scraperService.exportToExcel(offers);
-    return {
-      message: `Fichier Excel généré avec succès dans /${OFFER_FILE_FOLDER_NAME}`,
-    };
+    try {
+      // Scraping search offers
+      const offers = await this.scraperService.scrapeJobOffers(SEARCHS);
+
+      // Creating excel file
+      this.scraperService.exportToExcel(offers);
+
+      return {
+        message: 'Excel file successfully created',
+      };
+    } catch (error) {
+      console.error('Error generating scraping file:', error);
+      throw new HttpException(
+        {
+          status: HttpStatus.INTERNAL_SERVER_ERROR,
+          error: 'Error generating excel file',
+        },
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 }
