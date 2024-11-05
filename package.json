@@ -27,12 +27,10 @@
     "@nestjs/swagger": "^8.0.2",
     "axios": "^1.7.7",
     "cheerio": "^1.0.0",
-    "dotenv": "^16.4.5",
     "exceljs": "^4.4.0",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.1",
-    "swagger-ui-express": "^5.0.1",
-    "xlsx": "^0.18.5"
+    "swagger-ui-express": "^5.0.1"
   },
   "devDependencies": {
     "@nestjs/cli": "^10.0.0",
@@ -44,7 +42,6 @@
     "@types/jest": "^29.5.2",
     "@types/node": "^20.17.6",
     "@types/supertest": "^6.0.0",
-    "@types/xlsx": "^0.0.35",
     "@typescript-eslint/eslint-plugin": "^8.0.0",
     "@typescript-eslint/parser": "^8.0.0",
     "eslint": "^8.0.0",

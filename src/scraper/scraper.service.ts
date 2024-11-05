@@ -6,12 +6,18 @@ import axios from 'axios';
 
 import * as cheerio from 'cheerio';
 import * as Excel from 'exceljs';
+import * as fs from 'fs';
+import * as path from 'path';
 
 import { JobOffer } from './interfaces/job-offers.interface';
 import { OfferSearch } from './interfaces/offer-search.interface';
 
 import { SEARCHS } from '../config/keywords';
-import { OFFER_FILE_FOLDER_NAME, OFFER_FILE_PREFIX } from '../config';
+import {
+  OFFER_FILE_FOLDER_NAME,
+  OFFER_FILE_PREFIX,
+  SEARCH_PAGE_COUNT,
+} from '../config';
 
 // File rows needed to display in excel file
 const FILE_ROWS = ['Title', 'Company', 'Location'];
@@ -28,7 +34,7 @@ export class ScraperService {
 
     // Getting 3 first search page from searchs array
     for (const search of searchs) {
-      for (let page = 1; page <= 3; page++) {
+      for (let page = 1; page <= SEARCH_PAGE_COUNT; page++) {
         const offers = await this.scrapeHelloWorkPage(search, page);
         allOffers.push(...offers);
       }
@@ -152,11 +158,17 @@ export class ScraperService {
         });
       });
 
-      // Save Excel file to choosen folder
+      // Save Excel file to chosen folder
       const timestamp = new Date().getTime();
-      workbook.xlsx.writeFile(
-        `${OFFER_FILE_FOLDER_NAME}/${OFFER_FILE_PREFIX}${timestamp}.xlsx`,
-      );
+      const folderPath = path.resolve(OFFER_FILE_FOLDER_NAME);
+
+      // Check if folder exists, and create it if not
+      if (!fs.existsSync(folderPath)) {
+        fs.mkdirSync(folderPath, { recursive: true });
+      }
+
+      const filePath = `${folderPath}/${OFFER_FILE_PREFIX}${timestamp}.xlsx`;
+      workbook.xlsx.writeFile(filePath);
     } catch (error) {
       console.error('Error creating excel file', error);
       throw new Error('Error creating excel file');

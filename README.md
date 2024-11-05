@@ -34,7 +34,16 @@ $ npm install
 
 Copy file '.env.exemple' to .env
 
-Update 'src/keywords.ts' to change search scraping
+<h3>Update 'src/config/keywords.ts' if you want to change :</h3>
+
+<ul>
+  <li>search scraping</li>
+</ul>
+
+<h3>Update 'src/config/index.ts' if you want change :</h3>
+  <li>change export folder name</li>
+  <li>file prefix</li>
+  <li>number of first search page scraping</li>
 
 ## Compile and run the project
 
