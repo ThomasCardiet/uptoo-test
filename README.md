@@ -34,6 +34,8 @@ $ npm install
 
 Copy file '.env.exemple' to .env
 
+Update 'src/keywords.ts' to change search scraping
+
 ## Compile and run the project
 
 ```bash
@@ -59,6 +61,11 @@ $ npm run test:e2e
 # test coverage
 $ npm run test:cov
 ```
+
+## Project routes
+
+/ => view swagger interface
+/generate-scraping-file => generate scraping file to folder
 
 ## Deployment
 
