@@ -74,8 +74,14 @@ $ npm run test:cov
 
 ## Project routes
 
-/ => view swagger interface
-/generate-scraping-file => generate scraping file to folder
+<ul>
+  <li>
+    <b>/</b> => View swagger interface
+  </li>
+  <li>
+    <b>/generate-scraping-file</b> => generate scraping file to folder
+  </li>
+</ul>
 
 ## Deployment
 
