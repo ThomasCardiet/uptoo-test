@@ -32,7 +32,7 @@
 $ npm install
 ```
 
-Copy file '.env.exemple' to .env
+Copy file '.env.exemple' to '.env'
 
 <h3>Update 'src/config/keywords.ts' if you want to change :</h3>
 <ul>

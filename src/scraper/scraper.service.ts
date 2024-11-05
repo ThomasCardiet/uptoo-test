@@ -20,7 +20,7 @@ import {
 } from '../config';
 
 // File rows needed to display in excel file
-const FILE_ROWS = ['Title', 'Company', 'Location'];
+const FILE_ROWS = ['Title', 'Company', 'Link', 'Location'];
 
 @Injectable()
 export class ScraperService {
@@ -59,7 +59,7 @@ export class ScraperService {
     location: string;
     page: number;
   }) {
-    const baseUrl = `${process.env.HELLO_WORK_BASE_URL}/emploi/recherche.html/`;
+    const baseUrl = `${process.env.HELLO_WORK_BASE_URL}/fr-fr/emploi/recherche.html/`;
 
     // Default values added to search params
     const sortType = 'relevance';
@@ -154,7 +154,12 @@ export class ScraperService {
 
         // Add worksheet rows from offers
         filteredOffers.forEach((offer) => {
-          worksheet.addRow([offer.title, offer.company, offer.search.location]);
+          worksheet.addRow([
+            offer.title,
+            offer.company,
+            `${process.env.HELLO_WORK_BASE_URL}${offer.link}`,
+            offer.search.location,
+          ]);
         });
       });
 
